@@ -1,9 +1,14 @@
 import React from 'react';
+import Banner from './Banner';
 import './Home.css';
+import Services from './Services';
 const Home = () => {
     return (
         <div className="home-container">
-            <h1>This is home</h1>
+            <Banner></Banner>
+            <h1 className="py-3 text-center">Our Services</h1>
+            <Services></Services>
+        
         </div>
     );
 };

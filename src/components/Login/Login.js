@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useHistory } from "react-router-dom";
 import google from '../../Images/google.png' 
 import useAuth from "../../hooks/useAuth";
 
@@ -15,6 +15,15 @@ const Login = () => {
     signInWithGoogle
     } = useAuth();
 
+    const location = useLocation();
+    const redirect_url = location.state?.from || '/home';
+    const history = useHistory();
+    const googleSignIn = () =>{
+      signInWithGoogle()
+      .then((result) =>{
+        history.push(redirect_url);
+       })
+    }
   return (
     <div className="text-center my-4">
       <h2>Please Login</h2>
@@ -67,9 +76,9 @@ const Login = () => {
         </Form>
       </div>
       <p className="mt-2">
-       
+       new user? then <br />
         <NavLink className="text-decoration-none ml-2" to="/signup">
-         new user? then  click here
+          click here
         </NavLink>
         <br />
         <NavLink className="text-decoration-none" to="/reset">
@@ -79,7 +88,7 @@ const Login = () => {
       <p className="mt-3">Or</p>
       <p> Login with</p>
       
-        <button onClick={signInWithGoogle} className="btn">
+        <button onClick={googleSignIn} className="btn">
           <img src={google} width="46px" alt="google-icon" />
         </button>
         

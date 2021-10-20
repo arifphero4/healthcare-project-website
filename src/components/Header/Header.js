@@ -27,8 +27,6 @@ const Header = () => {
                     <Nav className="ms-auto align-items-center">
                         <NavLink className="fw-bold" style={navStyle}  to="/home">HOME</NavLink>
                         <NavLink className="fw-bold" style={navStyle} to="/services">SERVICES</NavLink>
-                        <NavLink className="fw-bold" style={navStyle} to="/blog">BLOG</NavLink>
-                        <NavLink className="fw-bold" style={navStyle} to="/shop">SHOP</NavLink>
                         <NavLink className="fw-bold"  style={navStyle} to="/contact">CONTACT</NavLink>
 
                         {!displayName? (
