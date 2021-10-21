@@ -4,18 +4,18 @@ This a website about dental hospital where everyone can get information .
 
 ## Project 
 
-website link: https://educational-website-arifphero4.netlify.app/
+website link: https://healthcare-related-websi-5c9a9.web.app/
 
 ## Elements used for project
 
 - JSX
 - JSON  
-- NODE.js
 - React.js
-- Vanilla CSS
+- React React Dom
 - React Bootstrap
+- Vanilla CSS
 - Font Awesome
 
 ## Features
-- You can see your our featured courses.
-- You will get information about our advanced courses.
+- You can see your our facilities.
+- You will get information about hospital.

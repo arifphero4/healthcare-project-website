@@ -11,7 +11,7 @@ const Doctors = () => {
     return (
         <div className="mt-5">
             <div className="bg-danger text-white py-4">
-                <h1>Our All Doctors</h1>
+                <h1 className="text-center pt-3">Our All Doctors</h1>
             </div>
             <div className="container py-4 mx-auto row">
                 {
