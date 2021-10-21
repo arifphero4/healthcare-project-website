@@ -1,72 +1,72 @@
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { createContext } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-
-
+import Doctors from './components/Doctors/Doctors/Doctors';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
-import Home from './components/Home/Home';
-import Error from './components/Error/Error';
-import Services from './components/Services/Services';
-import Contact from './components/Contact/Contact';
-import Login from './components/Login/Login';
-import AuthProvider from './context/AuthProvider';
-import SignUp from './Signup/SignUp';
-import ResetPassword from './ResetPassword/ResetPassword';
-import Details from './components/Home/Details';
-import { createContext } from 'react';
+import DetailsService from './components/Home/DetailsService/DetailsService';
+import Home from './components/Home/Home/Home';
+import Hospital from './components/Hospital/Hospital/Hospital';
+import Login from './components/Login/Login/Login';
+import PrivateRoute from './components/Login/PrivateRouter/PrivateRouter';
+import Register from './components/Login/Register/Register';
+import NotPage from './components/NotPage/NotPage';
+import AuthProvider from './contexts/AuthProvider';
 import useFetch from './hooks/useFetch';
-import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 
 export const useServices = createContext();
-
 function App() {
-  const [details] = useFetch();
+  const [services] = useFetch()
+
   return (
-    <useServices.Provider value={[details]}>
-      
+    <div className="App">
       <AuthProvider>
-          <Router>
-            <Header></Header>
+        <useServices.Provider value={[services]}>
+          <BrowserRouter>
             <Switch>
               <Route exact path="/">
+                  <Header/>
                 <Home></Home>
+                <Footer/>
               </Route>
-              <Route exact path="/home">
-                <Home></Home>
-              </Route>
-              <Route exact path="/services">
-                <Services></Services>
-              </Route>
-            
-              <Route exact path="/contact">
-                <Contact></Contact>
-              </Route>
-              <Route exact path="/signup">
-                <SignUp></SignUp>
-              </Route>
-              <Route exact path="/login">
-                <Login></Login>
-              </Route>
-              <Route exact path="/reset">
-                <ResetPassword></ResetPassword>
+              <Route path="/home">
+                <Header />
+                <Home />
+                <Footer/>
               </Route>
               <PrivateRoute exact path="/details/:id">
-                <Details></Details>
+                <Header/>
+                <DetailsService />
+                <Footer/>
               </PrivateRoute>
-              <Route exact path="*">
-                <Error></Error>
+              <Route path="/login">
+                <Header/>
+                <Login />
+                <Footer/>
+              </Route>
+              <Route path="/register">
+                <Header/>
+                <Register />
+                <Footer/>
+              </Route>
+              <Route path="/hospital">
+                <Header />
+                <Hospital />
+                <Footer/>
+              </Route>
+              <Route path="/doctors">
+                <Header></Header>
+                <Doctors/>
+                <Footer></Footer>
+              </Route>
+              <Route path="*">
+                <NotPage></NotPage>
               </Route>
             </Switch>
-            <Footer></Footer>
-          </Router>
+          </BrowserRouter>
+        </useServices.Provider>
       </AuthProvider>
-      
-
-      
-      
-    </useServices.Provider>
+    </div>
   );
 }
 

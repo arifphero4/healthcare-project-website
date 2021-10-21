@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
 
 const useFetch = () => {
-    const [details, setDetails]= useState();
-     useEffect( ()=>{
-         fetch('/features.json')
-         .then(res => res.json())
-         .then(data => setDetails(data))
-
-     },[])
-     return[details]
-    
+    const [services, setServices] = useState([]);
+    useEffect(() => {
+        fetch('/services.json')
+            .then(res => res.json())
+            .then(data => setServices(data));
+    }, []);
+    return [services]
 };
 
-export default useFetch;
+export default useFetch

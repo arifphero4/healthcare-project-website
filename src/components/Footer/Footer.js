@@ -1,44 +1,59 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faInstagram,  faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 
 
 const Footer = () => {
-    const footerIcon ={
-        fontSize:"28px"
-        
-    };
-
-    // const footerStyle = {
-    //     position: "absolute",
-    //     bottom: "0",
-    //     width:"100%"
-    // }; 
+    const {user, logOut} = useAuth();
     return (
-        <div  >
-            <footer className=" py-3 my-2 bg-dark text-white">
-                <ul className="nav justify-content-center  pb-3  fs-4">
-                    <li className="nav-item mx-2"> <Link className="text-decoration-none text-white" to="/home">Home</Link></li>
-                    <li className="nav-item mx-2"><Link className="text-decoration-none text-white" to="/services">Services</Link></li>
-                    
-                    <li className="nav-item mx-2"><Link className="text-decoration-none text-white" to="/contact">Contact</Link> </li>
-                   
-                </ul>
-                <ul style={footerIcon} className="nav justify-content-center border-bottom pb-2 ">
-                <li  className="mx-3"><FontAwesomeIcon icon={faFacebook} /></li>
-                <li className="mx-3"> <FontAwesomeIcon icon={faTwitter} /></li>
-                <li className="mx-3"><FontAwesomeIcon icon={faYoutube} /></li>
-                <li className="mx-3"><FontAwesomeIcon icon={faInstagram} /></li>
-                </ul>
-
-                <p className="text-muted text-center pt-2   ">Copyright © 2021, Technique Easy Education - All Rights Reserved</p>
-
-
-
-            </footer>
-          
+        <div>
+            <div style={{background:'#333'}} className="py-5">
+               <div className="container row mx-auto">
+                    <div className="col-6 col-lg-3">
+                        <ul>
+                            <NavLink className="text-decoration-none text-white d-block h6" to="/home">Home</NavLink>
+                            <NavLink className="text-decoration-none text-white d-block h6" to="/doctors">Doctors</NavLink>
+                            <NavLink className="text-decoration-none text-white d-block h6" to="/hospital">Hospital</NavLink>
+                            {!user.email?
+                                <div>
+                            <NavLink className="text-decoration-none text-white d-block h6" to="/login">Login</NavLink>
+                            <NavLink className="text-decoration-none text-white d-block h6" to="/register">Register</NavLink>
+                            </div>
+                            :
+                            <button className="btn btn-link text-decoration-none px-0 text-white"onClick={logOut} >Logout</button>
+                            }
+                            
+                        </ul>
+                    </div>
+                    <div className="col-6 col-lg-3">
+                        <ul style={{listStyle:"none"}}>
+                            <li className="text-white h6"> <strong>Address</strong></li>
+                            <li className="text-white h6">Redwood City, CA 94872, USA</li>
+                            <li className="text-white h6"> <strong>Phone: </strong> +1 301-230-8925</li>
+                            <li className="text-white h6"><strong>Email: abc@hospitalplus.com</strong></li>
+                            
+                        </ul>
+                    </div>
+                    <div className="col-6 col-lg-3">
+                        <div>
+                            <ul style={{listStyle:"none"}}>
+                                <li><i class="fab fa-google text-white h4  "></i></li>
+                                <li><i class="fab fa-facebook text-white h4  "></i></li>
+                                <li><i class="fab fa-instagram text-white h4  "></i></li>
+                                <li><i class="fab fa-twitter text-white h4  "></i></li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="col-6 col-lg-3">
+                        <img className="img-fluid" src="https://i.ibb.co/PWJDGGZ/141701025-man-using-credit-card-in-shop-cashless-payment-with-pos-terminal.jpg" alt="" />
+                    </div>
+                </div>
+            </div>
+            <div className="bg-dark py-4">
+                <p className="text-white text-center">all right reserved by Dental <span className="text-danger">&copy; 2021</span></p>
+            </div>
         </div>
     );
 };

@@ -1,154 +1,139 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider,onAuthStateChanged,signInWithEmailAndPassword, signOut,createUserWithEmailAndPassword, updateProfile,sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import { useEffect, useState } from "react";
-import initializeFirebaseApp from "../Firebase/Firebase.init";
-initializeFirebaseApp();
-
-
+import initializeAuthentication from "../components/Login/firebase/firebase.init";
+initializeAuthentication()
 const useFirebase = () => {
+    const auth = getAuth()
+    const googleProvider = new GoogleAuthProvider();
+    const [name, setName] = useState('');
     const [user, setUser] = useState({});
-    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(true)
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
-    const [photo, setPhoto] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [isLogin, setIsLogin] = useState(false);
 
 
-
-    const auth = getAuth();
-
-    //---------Providers-------
-    const googleProvider = new GoogleAuthProvider();
-
-    //----------google sign in--------
-    const signInWithGoogle = () => {
+    const signInUsingGoogle = () => {
         setIsLoading(true);
         return signInWithPopup(auth, googleProvider)
-            .finally( ()=> setIsLoading(false))     
-    };
+            .finally(() => setIsLoading(false))
+    }
 
-    //----------email sign in------------
-    const signInWithEmail = (event) => {
+    const handleNameChange = e => {
+        setName(e.target.value);
+    }
+
+    const handleEmailChange = e => {
+        setEmail(e.target.value);
+    }
+
+    const handlePasswordChange = e => {
+        setPassword(e.target.value);
+    }
+
+    const updateUserName = () => {
+        updateProfile(auth.currentUser, {
+            displayName: name
+          }).then(() => {
+            
+          }).catch((error) => {
+           
+          });
+    }
+
+    const handleFormcontrol = event => {
         event.preventDefault();
+        
+        
+        if (password.length < 6) {
+            setError('password must be 6 charactar long')
+            return;
+        }
+        if (!/(?=.*[A-Z].*[A-Z])/.test(password)) {
+            setError('Password must have a minimum of two upper cases ')
+            return;
+        }
+        if (!/(?=.*[!@#$&*])/.test(password)) {
+            setError('The password will contain a minimum of one special symbols (!@#$&*)')
+            return;
+        }
+        isLogin ? processLogin(email, password) : createNewUser(email, password)
+    }
+
+
+    const processLogin = () => {
         signInWithEmailAndPassword(auth, email, password)
-         .then((result) => {
-             setUser(result.user);
-         })
-         .catch((error) =>{
-            setError(error.message)
-        })
+            .then(result => {
+                const user = result.user
+                setUser(user)
+                setError('')
+                // setUserName()
+            })
+            .catch(error => {
+                setError(error.message)
+            })
     }
 
-    //----------create new user-------
-    const createNewUser = (event) => {
-        event.preventDefault();
+    const setUserName = () => {
+        updateProfile(auth.currentUser, { displayName: name })
+            .then(result => { })
+    }
+
+    const createNewUser = () => {
         createUserWithEmailAndPassword(auth, email, password)
-        .then((result) => {
-            setUserName();
-            verifyEmail();
-            alert("user has been created");
-        })
-        .catch((error) =>{
-            setError(error.message)
-        })
+            .then(result => {
+                updateUserName()
+                setUser(result.user)
+                setError('')
+            })
+            .catch(error => {
+                setError(error.message)
+            })
     }
 
-
-    //--------get name---------
-     const handleNameChange = (event) =>{
-         setName(event?.target?.value)
-     }
-
-
-    //--------get photo---------
-     const handlePhotoChange = (event) =>{
-         setPhoto(event?.target?.value)
-     }
-
-
-    //--------get email---------
-     const handleEmailChange = (event) =>{
-         setEmail(event?.target?.value)
-     }
-
-
-    //--------get password---------
-     const handlePasswordChange = (event) =>{
-         setPassword(event?.target?.value)
-     }
-
-
-
-     //---------update profile------
-     const setUserName = () => {
-        updateProfile(auth.currentUser,{
-            displayName: name,
-            photoURL: photo,
-        })
-         .then(result => {})
-         .catch((error) => {
-            setError(error.message)
-        });
-      }
-
-    //------email verification------
-    const verifyEmail = () => {
-        sendEmailVerification(auth.currentUser)
-        .then (() =>{
-            alert(`a verification mail has send to ${email}`);
-        })
-      }
-
-    //-------reset password--------
-     const handleResetPassword =(event) =>{
-        event.preventDefault();
-        sendPasswordResetEmail(auth, email)
-        .then(() => {
-        alert(" reset password email has been sent");
-      })
-      .catch((error)=> {
-        setError(error.message);
-      });
-     }
-      
-
-    //-------currently signed-in user--------
-    useEffect( () =>{
-        const unsubscribed= onAuthStateChanged(auth, (signInUser) =>{
-            if(signInUser){
-                setUser(signInUser);            
-            }
-            setIsLoading(false);
-        });
-        return () => unsubscribed; 
-    },[])
-    
-    //-------sign out-------
-    const logOut =() =>{
-        setIsLoading(true);
+    const logOut = () => {
+        setIsLoading(true)
         signOut(auth)
-         .then(() =>{
-             setUser({ })
-         })
-         .finally( ()=> setIsLoading(false));
+            .then(() => {
+                setUser({})
+            })
+            .finally(() => setIsLoading(false))
     }
-    
+    const toggolLogin = e => {
+        setIsLogin(e.target.checked);
+    }
 
-
-    return{
-        user,
-        error,
-        isLoading,
-        signInWithGoogle,
-        logOut,
-        signInWithEmail, 
+    useEffect(() => {
+        const unsubscribed = onAuthStateChanged(auth, user => {
+            if (user) {
+                setUser(user)
+            }
+            setIsLoading(false)
+        })
+        return ()=> unsubscribed;
+    }, [])
+    return {
+        name,
         handleNameChange,
+        user,
+        email,
+        password,
+        signInUsingGoogle,
+        logOut,
         handleEmailChange,
         handlePasswordChange,
-        createNewUser,
-        handlePhotoChange,
-        handleResetPassword
+        handleFormcontrol,
+        error,
+        toggolLogin,
+        isLogin,
+        setIsLoading,
+        isLoading,
+        setUserName
     }
-};
+
+
+}
+
 
 export default useFirebase;
