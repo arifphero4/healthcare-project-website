@@ -47,6 +47,7 @@ const Login = () => {
                                     <i class="fab fa-google me-2 "></i>
                                         By Google
                                 </button>
+                                
                             </div>
                         </div>
                     </div>
